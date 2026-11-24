@@ -69,3 +69,7 @@ test/smoke.js     end-to-end lobby/game test over WebSocket         (node test/s
 ```
 
 The server is authoritative and only sends each player what their team can see, so fog of war can't be bypassed from the browser.
+
+## License
+
+[PolyForm Noncommercial 1.0.0](LICENSE.md). You may use, modify and share Flagrant for any non-commercial purpose; commercial use is not permitted. This is a source-available licence, not an OSI open-source one.

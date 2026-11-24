@@ -4,5 +4,6 @@ node_modules
 docs
 test
 *.md
+!LICENSE.md
 Dockerfile
 compose.yaml
