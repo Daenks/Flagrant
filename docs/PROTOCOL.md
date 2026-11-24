@@ -86,7 +86,7 @@ WebSocket at `ws(s)://<host>/ws`, JSON text frames, every message has a `t` fiel
 - `{t:'ping', idx, from}`
 - `{t:'game', ...}` — full snapshot for this viewer, sent after every action (see below).
 
-Settings object (defaults): `{mapSize:'medium' ('small'|'medium'|'large'), squadSize:3 (1-4), capsToWin:3 (1-5), jailTurns:3 (1-5), turnTime:90 (seconds, 0 = unlimited), roundLimit:40 (0 = none), fog:true}`.
+Settings object (defaults): `{mapSize:'medium' ('small'|'medium'|'large'), squadSize:3 (1-4), capsToWin:3 (1-5), jailTurns:3 (1-5), turnTime:90 (seconds, 0 = unlimited), roundLimit:40 (0 = none), fog:true, portals:true (false = portals become plains), seed:'ABC123' (map seed, random per room)}`.
 Max 4 players (humans+bots) per team.
 
 ### Game snapshot

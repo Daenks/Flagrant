@@ -15,7 +15,7 @@ const BOT_STEP_MS = 420;
 const LOBBY_GRACE_MS = 20000; // a refresh in the lobby keeps your seat this long
 const EMPTY_ROOM_MS = 120000; // a game with no humans connected is dropped after this
 const BOT_NAMES = ['Ada', 'Brook', 'Cato', 'Dune', 'Echo', 'Fern', 'Gale', 'Hex', 'Iris', 'Jinx', 'Kite', 'Lux'];
-const DEFAULTS = { mapSize: 'medium', squadSize: 3, capsToWin: 3, jailTurns: 3, turnTime: 90, roundLimit: 40, fog: true };
+const DEFAULTS = { mapSize: 'medium', squadSize: 3, capsToWin: 3, jailTurns: 3, turnTime: 90, roundLimit: 40, fog: true, portals: true };
 
 const sessions = new Map(); // token -> session
 const rooms = new Map(); // code -> room
@@ -283,6 +283,7 @@ function sanitizeSettings(cur, inp) {
   if ('turnTime' in inp) { const v = int(inp.turnTime, 0, 600, out.turnTime); out.turnTime = v > 0 && v < 15 ? 15 : v; }
   if ('roundLimit' in inp) { const v = int(inp.roundLimit, 0, 200, out.roundLimit); out.roundLimit = v > 0 && v < 5 ? 5 : v; }
   if ('fog' in inp) out.fog = !!inp.fog;
+  if ('portals' in inp) out.portals = !!inp.portals;
   if ('seed' in inp) { // empty / invalid = roll a new random one
     const v = typeof inp.seed === 'string' ? inp.seed.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12) : '';
     out.seed = v || randSeed();

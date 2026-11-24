@@ -24,6 +24,7 @@
         <h1>Flagrant</h1>
         <p class="tagline">Turn-based hex capture the flag. Sneak in, grab it, get home.</p>
       </div>
+      <button class="btn help-open" type="button">How to play</button>
     </header>
 
     <div class="card name-card">
@@ -70,6 +71,7 @@
         <span class="muted">Code</span> <b id="roomCode" class="code">----</b>
         <button id="copyLinkBtn" class="btn small" type="button">Copy invite link</button>
       </div>
+      <button class="btn help-open" type="button">How to play</button>
       <button id="leaveLobbyBtn" class="btn danger" type="button">Leave</button>
     </header>
 
@@ -185,11 +187,15 @@
     <button id="helpClose" class="btn small ghost help-close" type="button">Close</button>
     <h2>How to play</h2>
     <p>Red starts on the left, Blue on the right. Teams take turns; everyone on the active team moves at once. Steal the enemy flag and carry it to a hex <b>next to your own flag stand</b>. First to the capture target wins.</p>
+    <p class="muted">New here? Create a lobby, press <b>+ Bot</b> on both teams and start: bots will play with and against you.</p>
     <ul>
+      <li><b>Action points (AP)</b>: every unit gets its AP back each turn and spends it on moving, tagging and rescuing. Rough terrain costs more.</li>
+      <li><b>Fog of war</b>: you only see what your team sees. Forest and mountains block the view, units inside forest are only seen from next to them, hills and watchtowers see further. An enemy that slips out of view leaves a faded "last seen" marker.</li>
       <li><b>Tag</b> (3 AP): enemies standing in <b>your</b> territory. Tagged units go to your jail and drop any flag.</li>
       <li><b>Neutral strip</b>: nobody can be tagged there.</li>
       <li><b>Rescue</b> (1 AP): stand next to the enemy jail to free all your prisoners.</li>
       <li>Flag carriers are visible to everyone, but whoever grabs a flag is <b>safe</b> (cannot be tagged) until their next turn starts. Nobody may stand on their own flag stand. Step on your own dropped flag to return it.</li>
+      <li><b>Portals</b>: stand on one and jump to its twin on the far side of the map for 1 AP.</li>
       <li>Crates: <b>Haste</b> +3 AP for 3 turns, <b>Cloak</b> only seen from adjacent hexes, <b>Shield</b> absorbs one tag.</li>
     </ul>
     <h3>Classes</h3>
@@ -205,6 +211,8 @@
       <li>Click your unit to select, click a highlighted hex to move, click a crosshaired enemy to tag.</li>
       <li><kbd>Q</kbd> ability, <kbd>R</kbd> rescue, <kbd>G</kbd> jump through a portal you are standing on, <kbd>Space</kbd> end turn, <kbd>Tab</kbd> next unit with AP, <kbd>Esc</kbd> cancel.</li>
       <li>Drag or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>/arrows to pan, wheel or pinch to zoom.</li>
+      <li>Drag the squad panel or the log by its title to move it; the button in the title collapses it, double-click snaps it back.</li>
+      <li><kbd>?</kbd> opens this help during a game.</li>
       <li><kbd>Alt</kbd>+click, middle-click or <kbd>P</kbd> then click: ping for your team. <kbd>Enter</kbd>: chat.</li>
     </ul>
   </div>

@@ -28,6 +28,8 @@ class Game {
     this.w = map.w;
     this.h = map.h;
     this.terrain = map.terrain;
+    // Portals off: same map, with plain ground where the portals would be.
+    if (settings.portals === false) for (let i = 0; i < this.terrain.length; i++) if (this.terrain[i] === 'p') this.terrain[i] = '.';
     this.zone = map.zone;
     this.bases = map.bases;
     this.crateSpots = map.crateSpots;

@@ -11,6 +11,7 @@ const SETTINGS = [
   { key: 'turnTime', label: 'Turn timer', options: [[0, 'Unlimited'], [30, '30 s'], [45, '45 s'], [60, '60 s'], [90, '90 s'], [120, '2 min'], [180, '3 min'], [300, '5 min']] },
   { key: 'roundLimit', label: 'Round limit', options: [[0, 'None'], [20, '20'], [30, '30'], [40, '40'], [50, '50'], [60, '60'], [80, '80'], [100, '100']] },
   { key: 'fog', label: 'Fog of war', type: 'bool' },
+  { key: 'portals', label: 'Portals', type: 'bool' },
   { key: 'seed', label: 'Map seed', type: 'seed' },
 ];
 

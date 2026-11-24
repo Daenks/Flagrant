@@ -179,6 +179,7 @@ function toggleHelp(show) {
   pop.hidden = show === undefined ? !pop.hidden : !show;
 }
 $('#helpBtn').addEventListener('click', () => toggleHelp());
+for (const b of document.querySelectorAll('.help-open')) b.addEventListener('click', () => toggleHelp(true));
 $('#helpClose').addEventListener('click', () => toggleHelp(false));
 $('#helpPop').addEventListener('click', (e) => { if (e.target.id === 'helpPop') toggleHelp(false); });
 window.addEventListener('keydown', (e) => {
