@@ -167,7 +167,7 @@ bindChatForm($('#gameChatForm'), (text, scope) => { sendChat(text, scope); $('#g
 // ---------------------------------------------------------------- help
 function buildLegend() {
   const box = $('#terrainLegend');
-  for (const ch of ['.', 'f', 'h', 'w', 'm', 't', 'p', 'j']) {
+  for (const ch of ['.', 'f', 'h', 'w', 'd', 'm', 't', 'p', 'j']) {
     const T = TERRAIN[ch];
     const cv = el('canvas');
     try { drawSwatch(cv, ch); } catch (e) { console.error(e); }

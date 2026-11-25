@@ -12,6 +12,7 @@ const SETTINGS = [
   { key: 'roundLimit', label: 'Round limit', options: [[0, 'None'], [20, '20'], [30, '30'], [40, '40'], [50, '50'], [60, '60'], [80, '80'], [100, '100']] },
   { key: 'fog', label: 'Fog of war', type: 'bool' },
   { key: 'portals', label: 'Portals', type: 'bool' },
+  { key: 'water', label: 'Water can be crossed', type: 'bool' },
   { key: 'seed', label: 'Map seed', type: 'seed' },
 ];
 

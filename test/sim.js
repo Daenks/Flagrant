@@ -59,7 +59,7 @@ function playGame(g) {
     { id: 'r1', name: 'R1', team: 0, bot: true }, { id: 'r2', name: 'R2', team: 0, bot: true },
     { id: 'b1', name: 'B1', team: 1, bot: true }, { id: 'b2', name: 'B2', team: 1, bot: true },
   ];
-  const settings = { mapSize, squadSize: 3, capsToWin: 3, jailTurns: 3, turnTime: 0, roundLimit: 40, fog: true };
+  const settings = { mapSize, squadSize: 3, capsToWin: 3, jailTurns: 3, turnTime: 0, roundLimit: 40, fog: true, water: process.env.SIM_WATER !== "0" };
   const game = new Game(players, settings, seed);
   const groups = perPlayer
     ? [[new Set(['r1']), new Set(['r2'])], [new Set(['b1']), new Set(['b2'])]]

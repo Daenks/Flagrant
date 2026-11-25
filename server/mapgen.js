@@ -7,6 +7,8 @@ const SIZES = {
   large: [35, 19],
 };
 
+// 'w' = shallows (wadeable). 'd' = deep water: impassable, does not block sight. Used instead of
+// shallows when the "water" setting is off.
 const PASSABLE = { '.': 1, f: 2, h: 2, w: 3, t: 1, p: 1 };
 
 function valueNoise(rng, scale) {
@@ -30,8 +32,11 @@ function valueNoise(rng, scale) {
 /**
  * Generate a point-symmetric hex map.
  * Returns { grid, w, h, terrain[], zone(Uint8Array), bases[2], crateSpots[] }.
+ * opts.water === false makes all water impassable (same layout otherwise, plus whatever
+ * the connectivity pass has to open up).
  */
-function generateMap(sizeName, seed) {
+function generateMap(sizeName, seed, opts = {}) {
+  const WATER = opts.water === false ? 'd' : 'w';
   const [w, h] = SIZES[sizeName] || SIZES.medium;
   const grid = new Grid(w, h);
   const rng = mulberry32(seed);
@@ -50,7 +55,7 @@ function generateMap(sizeName, seed) {
     let ch = '.';
     if (e > 0.66) ch = 'm';
     else if (e > 0.58) ch = 'h';
-    else if (e < 0.34) ch = 'w';
+    else if (e < 0.34) ch = WATER;
     else if (m > 0.54) ch = 'f';
     setBoth(i, ch);
   }
@@ -104,8 +109,9 @@ function generateMap(sizeName, seed) {
     }
     seen = flood();
   }
+  // Unreachable land becomes mountain, or lake when water is impassable (islands would only tease).
   for (let i = 0; i < grid.n; i++) {
-    if (grid.validIdx(i) && PASSABLE[terrain[i]] && !seen[i]) terrain[i] = 'm';
+    if (grid.validIdx(i) && PASSABLE[terrain[i]] && !seen[i]) terrain[i] = WATER === 'd' ? 'd' : 'm';
   }
 
   // Zones: 0 red, 1 blue, 2 neutral strip.

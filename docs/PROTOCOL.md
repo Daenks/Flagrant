@@ -22,6 +22,7 @@ The client is purely presentational: it never computes rules, only renders snaps
 | `f` | forest | 2 | blocks line of sight; units inside are only seen from adjacent hexes |
 | `h` | hill | 2 | unit on it: +2 vision, sees over forest |
 | `w` | shallows | 3 | |
+| `d` | deep water | impassable | does not block line of sight; replaces shallows when the `water` setting is off |
 | `m` | mountain | impassable | blocks line of sight |
 | `t` | watchtower | 1 | unit on it: +3 vision, sees over forest |
 | `p` | portal | 1 | spend 1 AP standing on it (move onto its twin, which shows up as reachable) to teleport to the mirrored portal. With the `portals` setting off, portal tiles are generated as plains |
@@ -88,7 +89,7 @@ WebSocket at `ws(s)://<host>/ws`, JSON text frames, every message has a `t` fiel
 - `{t:'ping', idx, from}`
 - `{t:'game', ...}` — full snapshot for this viewer, sent after every action (see below).
 
-Settings object (defaults): `{mapSize:'medium' ('small'|'medium'|'large'), squadSize:3 (1-4), capsToWin:3 (1-5), jailTurns:3 (1-5), turnTime:90 (seconds, 0 = unlimited), roundLimit:40 (0 = none), fog:true, portals:true (false = portals become plains), seed:'ABC123' (map seed, random per room)}`.
+Settings object (defaults): `{mapSize:'medium' ('small'|'medium'|'large'), squadSize:3 (1-4), capsToWin:3 (1-5), jailTurns:3 (1-5), turnTime:90 (seconds, 0 = unlimited), roundLimit:40 (0 = none), fog:true, portals:true (false = portals become plains), water:true (false = all water is impassable deep water), seed:'ABC123' (map seed, random per room)}`.
 The seed and map size fully determine the map; a new seed is rolled when the host returns the room to the lobby after a game.
 Max 4 players (humans+bots) per team.
 

@@ -24,7 +24,7 @@ class Game {
     this.settings = settings;
     this.players = players.map((p) => ({ id: p.id, name: p.name, team: p.team, bot: !!p.bot }));
     this.rng = mulberry32(seed ^ 0x9e3779b9);
-    const map = generateMap(settings.mapSize, seed);
+    const map = generateMap(settings.mapSize, seed, { water: settings.water !== false });
     this.grid = map.grid;
     this.w = map.w;
     this.h = map.h;

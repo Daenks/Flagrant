@@ -93,6 +93,7 @@ export const TERRAIN = {
   f: { name: 'Forest', cost: '2', note: 'Blocks sight. Units inside are seen only from adjacent hexes.' },
   h: { name: 'Hill', cost: '2', note: '+2 vision, see over forest.' },
   w: { name: 'Shallows', cost: '3' },
+  d: { name: 'Deep water', cost: 'impassable', note: 'Replaces shallows when water crossing is off. Does not block sight.' },
   m: { name: 'Mountain', cost: 'impassable', note: 'Blocks sight.' },
   t: { name: 'Watchtower', cost: '1', note: '+3 vision, see over forest.' },
   p: { name: 'Portal', cost: '1', note: 'Spend 1 AP to jump to its twin.' },

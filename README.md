@@ -69,7 +69,7 @@ Red starts on the left, Blue on the right. Teams take turns; everyone on the act
 |---|---|
 | Plains | 1 AP to enter |
 | Forest, hills | 2 AP. Forest hides units; hills extend vision |
-| Shallows | 3 AP |
+| Shallows | 3 AP. With water crossing switched off they become deep water: impassable, but you can see across |
 | Mountains | Impassable, block vision |
 | Watchtower | +3 vision while standing on it |
 | Portal | Jump to the matching portal on the far side of the map for 1 AP |
@@ -95,7 +95,7 @@ The squad panel and the log can be dragged by their title bars, collapsed with t
 
 ## Lobby options
 
-The host can set the map size (small, medium, large), units per player (1–4), captures to win, jail length, turn timer, round limit, and switch fog of war and portals on or off.
+The host can set the map size (small, medium, large), units per player (1–4), captures to win, jail length, turn timer, round limit, and switch fog of war, portals and water crossing on or off.
 
 The **map seed** decides which map is generated: press **Reroll** for a new random one, or type a seed to replay a map (same seed and map size give the same map). The map stays hidden until the game starts, and a new seed is rolled after every game.
 
