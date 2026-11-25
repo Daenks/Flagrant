@@ -11,6 +11,7 @@ Sneak through the fog, grab the enemy flag and get it home — without getting t
 - **Multiplayer in the browser** — up to 4 players or bots per team, public lobbies or private ones joined by code or invite link. No sign-up.
 - **Generated hex maps** — plains, forest, hills, shallows, mountains, watchtowers and portals, always fair for both sides. Reroll the map or type a seed to replay one.
 - **Fog of war** — you only see what your team sees. Forests hide units, hills and towers extend your view.
+- **Flag handoffs** — pass the flag to a teammate, or take it from one who is stuck, to keep a run alive.
 - **Tag and jail** — catch intruders in your territory and they sit in your jail, until a teammate breaks them out.
 - **Three unit classes** — fast Scouts, long-reach Sentinels and trap-laying Saboteurs, each with a special ability.
 - **Supply crates** — haste, cloak and shield pickups drop near the middle of the map.

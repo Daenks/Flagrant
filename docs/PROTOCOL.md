@@ -24,7 +24,7 @@ The client is purely presentational: it never computes rules, only renders snaps
 | `w` | shallows | 3 | |
 | `m` | mountain | impassable | blocks line of sight |
 | `t` | watchtower | 1 | unit on it: +3 vision, sees over forest |
-| `p` | portal | 1 | spend 1 AP standing on it (move onto its twin, which shows up as reachable) to teleport to the mirrored portal |
+| `p` | portal | 1 | spend 1 AP standing on it (move onto its twin, which shows up as reachable) to teleport to the mirrored portal. With the `portals` setting off, portal tiles are generated as plains |
 | `j` | jail | impassable | prisoners are held here |
 | ` ` | void | impassable | off-map |
 | `?` | unexplored | - | only appears in client snapshots |
@@ -45,6 +45,7 @@ The client is purely presentational: it never computes rules, only renders snaps
 - Tag: 3 AP, target enemy within reach, visible, and standing in the tagger's territory. Tagged unit goes to the tagger's jail and respawns at home at the start of its Nth own turn after the tag (rescued units come back with 0 AP). It drops the flag where it stood.
 - Jailbreak: a unit adjacent to the enemy jail that holds teammates can Rescue (1 AP): all prisoners go back to their own base.
 - Flags: step on the enemy flag to take it (the carrier is always visible to everyone, and is `safe` — cannot be tagged — until its team's next turn starts). Carry it to a hex **adjacent to** your own flag stand to capture (a team cannot step on its own flag stand, so defenders can't sit on the flag). A dropped flag can be picked up by enemies, or returned home instantly by its own team stepping on it.
+- Handoff: 1 AP, paid by the acting unit. A carrier can pass the flag to an adjacent teammate, and any unit can take it from an adjacent carrying teammate (even one that is stunned or has no AP), across players of the same team. Each flag changes hands at most once per turn. The previous carrier loses `safe` and the new carrier does not get it. If the receiver stands adjacent to its own flag stand, the capture happens immediately.
 - Crates appear in mirrored pairs: `haste` (+3 AP for 3 turns), `cloak` (only seen from adjacent hexes, 3 turns), `shield` (absorbs one tag).
 - First team to `capsToWin` wins; at `roundLimit` the higher score wins (tie = draw).
 
@@ -88,6 +89,7 @@ WebSocket at `ws(s)://<host>/ws`, JSON text frames, every message has a `t` fiel
 - `{t:'game', ...}` — full snapshot for this viewer, sent after every action (see below).
 
 Settings object (defaults): `{mapSize:'medium' ('small'|'medium'|'large'), squadSize:3 (1-4), capsToWin:3 (1-5), jailTurns:3 (1-5), turnTime:90 (seconds, 0 = unlimited), roundLimit:40 (0 = none), fog:true, portals:true (false = portals become plains), seed:'ABC123' (map seed, random per room)}`.
+The seed and map size fully determine the map; a new seed is rolled when the host returns the room to the lobby after a game.
 Max 4 players (humans+bots) per team.
 
 ### Game snapshot
@@ -145,7 +147,7 @@ Each has `e` and usually `msg` (ready-to-print log line; print it if present). `
 - `{e:'tag', by, target, at, msg}` — `at` = tile or -1 if you can't see it.
 - `{e:'shield', id, at, msg}` — a tag was absorbed.
 - `{e:'jailfree', team, ids, msg}` — units released (rescued or served their time).
-- `{e:'flag', kind:'taken'|'dropped'|'returned'|'captured', team, by, at, msg}` — `team` = whose flag.
+- `{e:'flag', kind:'taken'|'dropped'|'returned'|'captured'|'passed', team, by, at, msg}` — `team` = whose flag. For `passed` (handoff) `by` is the unit that gave the flag up, `to` the unit that now carries it and `at` the new carrier's tile.
 - `{e:'pickup', id, kind, at, msg}`
 - `{e:'trap', id, at, msg}` — a unit triggered a trap.
 - `{e:'ability', id, kind, at, msg}`
