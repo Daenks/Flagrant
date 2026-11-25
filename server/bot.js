@@ -705,6 +705,14 @@ function botStep(game, ownerIds) {
   // 2. Jailbreak whenever possible.
   for (const u of free) if (game.canRescue(u) && game.rescue(u)) return true;
 
+  // 2b. Take the flag from an adjacent teammate that is stuck (stunned or out of AP) when we can still run.
+  //     Never from a "safe" carrier: the protection is lost on a handoff.
+  for (const u of free) {
+    if (u.flag || u.ap < 4) continue;
+    const c = game.handoffTargets(u)[0];
+    if (c && !c.safe && (c.stunned || c.ap <= 1) && game.handoff(u, c)) return true;
+  }
+
   // 3. One unit at a time: carriers first.
   const active = free.filter((u) => !tm.done.has(u.id)).sort((a, b) => (b.flag - a.flag) || a.id - b.id);
   for (const u of active) {

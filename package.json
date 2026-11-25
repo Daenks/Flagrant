@@ -6,7 +6,8 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "sim": "node test/sim.js"
+    "sim": "node test/sim.js",
+    "test": "node test/handoff.js && node test/smoke.js"
   },
   "engines": {
     "node": ">=18"

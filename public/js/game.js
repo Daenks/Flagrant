@@ -45,7 +45,7 @@ export class GameUI {
     this.g = null;
     this.units = new Map();
     this.sel = null;
-    this.mode = null;          // null | 'ability' | 'ping'
+    this.mode = null;          // null | 'ability' | 'ping' | 'handoff'
     this.hover = -1;
     this.mouse = null;         // {x,y} screen coords for tooltip
     this.ghosts = new Map();
@@ -340,6 +340,9 @@ export class GameUI {
           this.banner(`${teamName(ev.team)} flag taken!`, ev.team, 'small');
         } else if (ev.kind === 'dropped') {
           sfx('flagDropped'); fx('ring', ev.at, rgb, 700, { r: 28 });
+        } else if (ev.kind === 'passed') {
+          sfx('click'); fx('ring', ev.at, rgb, 600, { r: 24 });
+          fx('text', ev.at, [255, 255, 255], 900, { text: 'HANDOFF' });
         } else if (ev.kind === 'returned') {
           sfx('flagReturned'); fx('beam', ev.at, rgb, 900);
         } else if (ev.kind === 'captured') {
@@ -518,6 +521,23 @@ export class GameUI {
     sfx('click');
   }
 
+  /** Pass the flag to, or take it from, an adjacent teammate. With several candidates, pick one on the map. */
+  handoff(targetId) {
+    const u = this._unit(this.sel);
+    const list = this._act(this.sel)?.handoff;
+    if (!u || !this.myTurn || !Array.isArray(list) || !list.length) return;
+    if (targetId == null && list.length > 1) {
+      this.mode = this.mode === 'handoff' ? null : 'handoff';
+      this.renderHud();
+      return;
+    }
+    const target = targetId == null ? list[0] : list.find((id) => idEq(id, targetId));
+    this.mode = null;
+    if (target == null) { this.renderHud(); return; }
+    this.net.send({ t: 'handoff', unit: u.id, target });
+    sfx('click');
+  }
+
   rescue() {
     const u = this._unit(this.sel);
     const a = this._act(this.sel);
@@ -575,6 +595,12 @@ export class GameUI {
 
     const here = g.units.filter((u) => u.pos === idx);
     const act = this.myTurn ? this._act(this.sel) : null;
+    if (this.mode === 'handoff') {
+      const mate = here.find((u) => (act?.handoff || []).some((id) => idEq(id, u.id)));
+      if (mate) this.handoff(mate.id);
+      else { this.mode = null; this.renderHud(); }
+      return;
+    }
     const enemy = here.find((u) => u.team !== this.myTeam);
     if (enemy && act && Array.isArray(act.tags) && act.tags.some((t) => idEq(t, enemy.id))) {
       this.net.send({ t: 'tag', unit: this.sel, target: enemy.id });
@@ -678,6 +704,7 @@ export class GameUI {
         case 'q': this.useAbility(); break;
         case 'r': this.rescue(); break;
         case 'g': this.portal(); break;
+        case 'f': this.handoff(); break;
         case 'p': this.mode = this.mode === 'ping' ? null : 'ping'; this.renderHud(); break;
         case 'tab': e.preventDefault(); this.cycleUnit(e.shiftKey ? -1 : 1); break;
         case 'escape': this.cancel(); break;
@@ -761,6 +788,7 @@ export class GameUI {
   _bindHud() {
     $('#abilityBtn').addEventListener('click', () => this.useAbility());
     $('#rescueBtn').addEventListener('click', () => this.rescue());
+    $('#handoffBtn').addEventListener('click', () => this.handoff());
     $('#portalBtn').addEventListener('click', () => this.portal());
     $('#endTurnBtn').addEventListener('click', () => this.endTurn());
     $('#pingBtn').addEventListener('click', () => { this.mode = this.mode === 'ping' ? null : 'ping'; this.renderHud(); });
@@ -798,11 +826,14 @@ export class GameUI {
       this._renderCard();
       this._renderOver();
       this._tickTimer();
-      this.canvas.classList.toggle('targeting', this.mode === 'ability' || this.mode === 'ping');
+      this.canvas.classList.toggle('targeting', this.mode === 'ability' || this.mode === 'ping' || this.mode === 'handoff');
       const hint = $('#modeHint');
       if (this.mode === 'ability') {
         const ab = this._abilityTargets();
         hint.textContent = `Choose a target for ${ab?.kind === 'trap' ? 'Trap' : 'Flare'} (Esc / right-click to cancel)`;
+        hint.hidden = false;
+      } else if (this.mode === 'handoff') {
+        hint.textContent = 'Click the teammate next to you who should get the flag (Esc to cancel)';
         hint.hidden = false;
       } else if (this.mode === 'ping') {
         hint.textContent = 'Click the map to ping your team (Esc to cancel)';
@@ -886,6 +917,12 @@ export class GameUI {
     ab.disabled = !(this.myTurn && act?.ability?.ready);
     ab.classList.toggle('armed', this.mode === 'ability');
     rb.disabled = !(this.myTurn && act?.rescue);
+    const hb = $('#handoffBtn');
+    const hand = this.myTurn && Array.isArray(act?.handoff) && act.handoff.length > 0;
+    hb.hidden = !hand;
+    hb.innerHTML = `${u?.flag ? 'Pass flag' : 'Take flag'} <kbd>F</kbd>`;
+    hb.classList.toggle('armed', this.mode === 'handoff');
+    if (!hand && this.mode === 'handoff') this.mode = null;
     const pb = $('#portalBtn');
     pb.hidden = !(this.myTurn && act?.portal);
     pb.classList.toggle('dim', !!act?.portal && !act.portal.ok);

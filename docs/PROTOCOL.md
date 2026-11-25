@@ -71,6 +71,7 @@ WebSocket at `ws(s)://<host>/ws`, JSON text frames, every message has a `t` fiel
 | `{t:'tag', unit, target}` | tag enemy unit id `target` |
 | `{t:'ability', unit, target?}` | use class ability; `target` = tile index for flare/trap, omitted for dash |
 | `{t:'rescue', unit}` | jailbreak |
+| `{t:'handoff', unit, target}` | 1 AP: `unit` passes the enemy flag to, or takes it from, the adjacent teammate unit `target`. Once per flag per turn; the new carrier is not `safe`. Emits a `flag` event with `kind:'passed'` |
 | `{t:'endTurn'}` | mark yourself done for this turn |
 | `{t:'ping', idx}` | map ping shown to your team |
 | `{t:'toLobby'}` | host only, after game over: back to lobby |
@@ -127,6 +128,7 @@ Max 4 players (humans+bots) per team.
       tags: [enemyUnitId, ...],
       ability: { kind:'dash'|'flare'|'trap', ready: bool, targets: [idx...] | null },  // targets null = no target needed
       rescue: bool,
+      handoff: [unitId],   // adjacent teammates this unit can pass the flag to / take it from
       portal: null | { to: idx, ok: bool, why: string }   // set while standing on a portal: where it leads and whether the jump is possible
     }
   },

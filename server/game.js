@@ -12,6 +12,7 @@ const TEAM = ['Red', 'Blue'];
 const CRATE_KINDS = ['haste', 'cloak', 'shield'];
 const FLARE_RANGE = 7, FLARE_RADIUS = 2, DASH_AP = 4, HASTE_AP = 3, MAX_TRAPS = 2;
 const TAG_COST = 3;
+const HANDOFF_COST = 1;
 const CRATE_EVERY = 3, MAX_CRATES = 6;
 
 class Game {
@@ -256,6 +257,21 @@ class Game {
     return this.units.some((o) => o.team === u.team && o.jailed > 0);
   }
 
+  /**
+   * Teammates this unit can exchange the enemy flag with right now. A carrier may pass it to any
+   * adjacent teammate; anyone else may take it from an adjacent carrying teammate (even one that is
+   * stunned or out of AP). The acting unit pays. Each flag changes hands at most once per turn.
+   */
+  handoffTargets(u) {
+    if (!this.canAct(u) || u.stunned || u.ap < HANDOFF_COST) return [];
+    const f = this.flags[1 - u.team];
+    if (f.state !== 'carried' || f.passed) return [];
+    const near = (o) => o !== u && o.team === u.team && this.isFree(o) && this.grid.dist(o.pos, u.pos) === 1;
+    if (u.flag) return this.units.filter(near);
+    const c = this.unit(f.carrier);
+    return c && near(c) ? [c] : [];
+  }
+
   // ---------------------------------------------------------------- actions
 
   move(u, to) {
@@ -333,17 +349,40 @@ class Game {
       this.emitAll({ e: 'flag', kind: 'returned', team: u.team, by: u.id, at: n, msg: `${u.name} returned the ${TEAM[u.team]} flag` });
     }
     if (u.flag) theirs.pos = n;
-    if (u.flag && this.grid.dist(n, this.bases[u.team].flag) <= 1) {
-      u.flag = false;
-      theirs.state = 'home';
-      theirs.carrier = null;
-      theirs.pos = this.bases[foe].flag;
-      this.scores[u.team]++;
-      stop = true;
-      this.emitAll({ e: 'flag', kind: 'captured', team: foe, by: u.id, at: n, msg: `${u.name} CAPTURED the ${TEAM[foe]} flag! (${this.scores[0]} - ${this.scores[1]})` });
-      if (this.scores[u.team] >= this.settings.capsToWin) this.finish(u.team, `${TEAM[u.team]} reached ${this.settings.capsToWin} captures`);
-    }
+    if (this.tryCapture(u)) stop = true;
     return stop;
+  }
+
+  /** Scores if the unit carries the flag and stands next to its own flag stand. */
+  tryCapture(u) {
+    if (!u.flag || this.grid.dist(u.pos, this.bases[u.team].flag) > 1) return false;
+    const foe = 1 - u.team, theirs = this.flags[foe];
+    u.flag = false;
+    theirs.state = 'home';
+    theirs.carrier = null;
+    theirs.pos = this.bases[foe].flag;
+    this.scores[u.team]++;
+    this.emitAll({ e: 'flag', kind: 'captured', team: foe, by: u.id, at: u.pos, msg: `${u.name} CAPTURED the ${TEAM[foe]} flag! (${this.scores[0]} - ${this.scores[1]})` });
+    if (this.scores[u.team] >= this.settings.capsToWin) this.finish(u.team, `${TEAM[u.team]} reached ${this.settings.capsToWin} captures`);
+    return true;
+  }
+
+  handoff(u, other) {
+    if (!other || !this.handoffTargets(u).includes(other)) return false;
+    const from = u.flag ? u : other, to = u.flag ? other : u;
+    const f = this.flags[1 - u.team];
+    u.ap -= HANDOFF_COST;
+    from.flag = false;
+    from.safe = false;
+    to.flag = true;
+    to.buffs.cloak = 0; // a carrier is always visible; the grab's "safe" protection is not passed on
+    f.carrier = to.id;
+    f.pos = to.pos;
+    f.passed = true;
+    this.emitAll({ e: 'flag', kind: 'passed', team: f.team, by: from.id, to: to.id, at: to.pos, msg: `${from.name} handed the ${TEAM[f.team]} flag to ${to.name}` });
+    this.tryCapture(to);
+    this.refreshVision();
+    return true;
   }
 
   dropFlag(u) {
@@ -447,6 +486,7 @@ class Game {
       if (this.round % CRATE_EVERY === 2) this.dropCrates();
     }
     const team = this.turnTeam;
+    for (const f of this.flags) f.passed = false;
     this.flares = this.flares.filter((f) => f.team !== team);
     const freed = [];
     for (const u of this.units) {
@@ -541,6 +581,7 @@ class Game {
           tags: this.tagTargets(u).map((e) => e.id),
           ability: this.abilityInfo(u),
           rescue: this.canRescue(u),
+          handoff: this.handoffTargets(u).map((o) => o.id),
         };
       }
     }
@@ -566,4 +607,4 @@ class Game {
   }
 }
 
-module.exports = { Game, CLASSES, TEAM, TAG_COST };
+module.exports = { Game, CLASSES, TEAM, TAG_COST, HANDOFF_COST };

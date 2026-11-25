@@ -397,7 +397,7 @@ function handle(s, m) {
       return chat(room, { t: 'ping', idx, from: me.name }, me.team);
     }
 
-    case 'move': case 'tag': case 'ability': case 'rescue': {
+    case 'move': case 'tag': case 'ability': case 'rescue': case 'handoff': {
       if (!room || room.state !== 'playing' || !me) return;
       const g = room.game;
       const u = g.unit(m.unit | 0);
@@ -406,6 +406,7 @@ function handle(s, m) {
       if (m.t === 'move') ok = g.move(u, m.to | 0);
       else if (m.t === 'tag') ok = g.tag(u, g.unit(m.target | 0));
       else if (m.t === 'ability') ok = g.ability(u, m.target == null ? undefined : m.target | 0);
+      else if (m.t === 'handoff') ok = g.handoff(u, g.unit(m.target | 0));
       else ok = g.rescue(u);
       if (!ok) return send(s, g.snapshot(s.id)); // resync a stale client
       if (g.over) return finishGame(room);

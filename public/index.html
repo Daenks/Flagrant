@@ -146,6 +146,7 @@
     <div id="actionBtns">
       <button id="abilityBtn" class="btn" type="button">Ability <kbd>Q</kbd></button>
       <button id="rescueBtn" class="btn rescue" type="button">Rescue <kbd>R</kbd></button>
+      <button id="handoffBtn" class="btn handoff" type="button" hidden>Pass flag <kbd>F</kbd></button>
       <button id="portalBtn" class="btn portal" type="button" hidden>Jump through portal <kbd>G</kbd></button>
       <button id="endTurnBtn" class="btn primary" type="button">End turn <kbd>Space</kbd></button>
     </div>
@@ -195,6 +196,7 @@
       <li><b>Neutral strip</b>: nobody can be tagged there.</li>
       <li><b>Rescue</b> (1 AP): stand next to the enemy jail to free all your prisoners.</li>
       <li>Flag carriers are visible to everyone, but whoever grabs a flag is <b>safe</b> (cannot be tagged) until their next turn starts. Nobody may stand on their own flag stand. Step on your own dropped flag to return it.</li>
+      <li><b>Handoff</b> (1 AP): a flag carrier can pass the flag to a teammate on the next hex, and a teammate can take it from a carrier who is stuck or out of AP. Each flag can change hands once per turn, and the new carrier is <b>not</b> safe.</li>
       <li><b>Portals</b>: stand on one and jump to its twin on the far side of the map for 1 AP.</li>
       <li>Crates: <b>Haste</b> +3 AP for 3 turns, <b>Cloak</b> only seen from adjacent hexes, <b>Shield</b> absorbs one tag.</li>
     </ul>
@@ -209,7 +211,7 @@
     <h3>Controls</h3>
     <ul class="controls">
       <li>Click your unit to select, click a highlighted hex to move, click a crosshaired enemy to tag.</li>
-      <li><kbd>Q</kbd> ability, <kbd>R</kbd> rescue, <kbd>G</kbd> jump through a portal you are standing on, <kbd>Space</kbd> end turn, <kbd>Tab</kbd> next unit with AP, <kbd>Esc</kbd> cancel.</li>
+      <li><kbd>Q</kbd> ability, <kbd>R</kbd> rescue, <kbd>F</kbd> pass or take the flag, <kbd>G</kbd> jump through a portal you are standing on, <kbd>Space</kbd> end turn, <kbd>Tab</kbd> next unit with AP, <kbd>Esc</kbd> cancel.</li>
       <li>Drag or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>/arrows to pan, wheel or pinch to zoom.</li>
       <li>Drag the squad panel or the log by its title to move it; the button in the title collapses it, double-click snaps it back.</li>
       <li><kbd>?</kbd> opens this help during a game.</li>

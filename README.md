@@ -51,6 +51,7 @@ Red starts on the left, Blue on the right. Teams take turns; everyone on the act
 - **Tagging (3 AP):** you can tag an enemy standing in *your* territory. It drops the flag and goes to your jail for a few turns. Nobody can be tagged in the neutral strip down the middle, or on their own side.
 - **Jailbreak (1 AP):** get a unit next to the enemy jail to free all your prisoners at once.
 - **Flags:** a flag carrier is visible to everyone, but whoever grabs a flag is *safe* from tags until their next turn starts. A dropped flag can be picked up by an attacker, or returned by a defender stepping on it.
+- **Handoff (1 AP):** a carrier can pass the flag to a teammate on the next hex, and a teammate can take it from a carrier who is stuck or out of AP. Each flag can change hands once per turn, and the new carrier doesn't inherit the *safe* protection.
 - **Fog of war:** forests and mountains block line of sight, and units inside a forest are only seen from an adjacent hex. Hills and watchtowers see further and over forest. Enemies that slip out of view leave a "last seen" marker.
 
 ### Unit classes
@@ -79,6 +80,7 @@ Red starts on the left, Blue on the right. Teams take turns; everyone on the act
 |---|---|
 | Select a unit, move, tag | Click the unit, then a highlighted hex or a crosshaired enemy |
 | Ability / rescue / portal jump | `Q` / `R` / `G` |
+| Pass or take the flag | `F` |
 | End turn | `Space` |
 | Next unit | `Tab` |
 | Scroll the map | Drag, or `W` `A` `S` `D` / arrow keys |
@@ -112,9 +114,10 @@ public/           browser client
 docs/PROTOCOL.md  full rules and the wire protocol
 test/sim.js       headless bot-vs-bot games with invariant checks
 test/smoke.js     end-to-end lobby and game test over WebSocket
+test/handoff.js   engine test for the flag handoff rule
 ```
 
-Run the tests with `npm run sim` and `node test/smoke.js`.
+Run the tests with `npm test` and the bot simulation with `npm run sim`.
 
 ## License
 
